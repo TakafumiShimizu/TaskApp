@@ -6,7 +6,6 @@ package jp.techacademy.takafumi.shimizu.taskapp;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -14,10 +13,20 @@ public class Task extends RealmObject implements Serializable {
     private String title; // タイトル
     private String contents; // 内容
     private Date date; // 日時
+    private String category;
 
     // id をプライマリーキーとして設定
     @PrimaryKey
     private int id;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
 
     public String getTitle() {
         return title;
