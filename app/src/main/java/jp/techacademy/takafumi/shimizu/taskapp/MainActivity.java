@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import io.realm.Realm;
@@ -18,7 +20,12 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+
+    EditText mEditText;
+
+
+
     public final static String EXTRA_TASK = "jp.techacademy.takafumi.shimizu.taskapp.TASK";
 
     private Realm mRealm;
@@ -35,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mEditText = (EditText) findViewById(R.id.editText);
+        Button button1 = (Button) findViewById(R.id.button1);
+        button1.setOnClickListener(this);
+
+
+
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -117,13 +132,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void reloadListView() {
         // Realmデータベースから、「全てのデータを取得して新しい日時順に並べた結果」を取得
-        RealmResults<Task> taskRealmResults = mRealm.where(Task.class).findAllSorted("date", Sort.DESCENDING);
+        RealmResults<Task> taskRealmResults = mRealm.where(Task.class).equalTo("category", mEditText.getText().toString()).findAllSorted("date", Sort.DESCENDING);
         // 上記の結果を、TaskList としてセットする
         mTaskAdapter.setTaskList(mRealm.copyFromRealm(taskRealmResults));
         // TaskのListView用のアダプタに渡す
         mListView.setAdapter(mTaskAdapter);
         // 表示を更新するために、アダプターにデータが変更されたことを知らせる
         mTaskAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View v) {
+        reloadListView();
     }
 
     @Override
